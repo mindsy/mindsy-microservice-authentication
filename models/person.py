@@ -7,7 +7,6 @@ class PersonModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     email = db.Column(db.String)
-    
 
     hospitals = db.relationship('HospitalModel', backref='hospital_person', uselist=False, cascade='all, delete-orphan')
     psychologists = db.relationship('PsychologistModel', backref='person_psy', uselist=False, cascade='all, delete-orphan')

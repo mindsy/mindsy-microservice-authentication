@@ -5,6 +5,7 @@ class PsychologistModel(db.Model):
 
     crp = db.Column(db.String, primary_key=True, autoincrement=False)
     password = db.Column(db.String)
+    token = db.Column(db.String)
     date_of_birth = db.Column(db.DateTime)
     
     person_psy_id = db.Column(db.Integer, db.ForeignKey('person.id'), unique=True)
