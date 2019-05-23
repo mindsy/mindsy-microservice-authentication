@@ -1,2 +1,7 @@
-coverage
-
+flask
+flask-jwt-extended
+flask-sqlalchemy
+flask-restful
+python-dotenv
+psycopg2==2.8.2
+passlib

@@ -7,7 +7,7 @@ class HospitalModel(db.Model):
     registry_number = db.Column(db.String(12), primary_key=True, autoincrement=False)
     social_reason = db.Column(db.String(150))
 
-    hospital_person_id = db.Column(db.Integer, db.ForeignKey('person.id'), unique=True)
+    hospital_person_id = db.Column(db.Integer, db.ForeignKey('person.id'), unique=True, nullable=False)
     hospital_psychologists = db.relationship('PsychologistHospitalModel', backref='hospital', lazy='dynamic', cascade='all, delete-orphan')
 
     def __init__(self, registry_number, social_reason, hospital_person_id):
