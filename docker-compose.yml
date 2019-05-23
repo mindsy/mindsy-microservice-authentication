@@ -4,5 +4,5 @@ services:
                 image: 'mindsy-microservice-authentication'
                 build: '.'
                 ports: 
-                        - "3000:5000"
+                        - "3002:5000"
 
