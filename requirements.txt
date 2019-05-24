@@ -5,3 +5,4 @@ flask-restful
 python-dotenv
 psycopg2==2.8.2
 passlib
+flask_swagger_ui
