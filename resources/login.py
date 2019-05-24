@@ -33,15 +33,18 @@ class UserLogin(Resource):
                         )
     @classmethod
     def post(self):
-        data = UserLogin.parser.parse_args()
-        psychologist = PsychologistModel.find_by_crp(data['crp'])
-        decripted_password = check_encrypted_password(data['password'], psychologist.password)
+        try:
+            data = UserLogin.parser.parse_args()
+            psychologist = PsychologistModel.find_by_crp(data['crp'])
+            decripted_password = check_encrypted_password(data['password'], psychologist.password)
 
-        if psychologist and decripted_password:
-            access_token = create_access_token(identity=psychologist.person_psy.id, fresh=True)
-            psychologist.token = access_token
-            psychologist.save_to_db()
-            return {'access_token': access_token}, 200
+            if psychologist and decripted_password:
+                access_token = create_access_token(identity=psychologist.person_psy.id, fresh=True)
+                psychologist.token = access_token
+                psychologist.save_to_db()
+                return {'access_token': access_token}, 200
+        except:
+            return{'Something wrong happened.'}
 
         return {'message': 'Invalid Credentials'}, 401
 
