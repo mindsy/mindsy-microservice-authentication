@@ -39,16 +39,25 @@ class UserLogin(Resource):
             psychologist.save_to_db()
             return {'access_token': access_token}, 200
 
-        print(decrypted_password)
         return {'message': 'Invalid Credentials'}, 401
 
 
 class UserLogout(Resource):
     @jwt_required
     def post(self, crp):
-        jti = get_raw_jwt()['jti']
-        BLACKLIST.add(jti)
-        psychologist = PsychologistModel.find_by_crp(crp)
-        psychologist.token = None
-        psychologist.save_to_db()
-        return {'message': 'Successfully logged out'}, 200
+        if len(crp) != 7 or not crp.isdigit():
+            return {"message": "Type a valid crp"}
+        new_crp = str(crp)
+        psychologist = PsychologistModel.find_by_crp(new_crp)
+        flag = False
+        if psychologist:
+            flag = True
+
+        if flag:
+            jti = get_raw_jwt()['jti']
+            BLACKLIST.add(jti)
+            psychologist.token = None
+            psychologist.save_to_db()
+            return {'message': 'Successfully logged out'}, 200
+
+        return {'We not found psychologist'}, 401
