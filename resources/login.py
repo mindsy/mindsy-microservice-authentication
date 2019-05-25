@@ -28,14 +28,18 @@ class UserLogin(Resource):
     def post(cls):
         data = UserLogin.parser.parse_args()
         psychologist = PsychologistModel.find_by_crp(data['crp'])
-        decrypted_password = check_encrypted_password(data['password'], psychologist.password)
 
-        if psychologist and decrypted_password:
+        decrypted_password = False
+        if psychologist:
+            decrypted_password = check_encrypted_password(data['password'], psychologist.password)
+
+        if decrypted_password:
             access_token = create_access_token(identity=psychologist.PERSON.id, fresh=True)
             psychologist.token = access_token
             psychologist.save_to_db()
             return {'access_token': access_token}, 200
 
+        print(decrypted_password)
         return {'message': 'Invalid Credentials'}, 401
 
 
