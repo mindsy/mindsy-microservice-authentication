@@ -3,30 +3,15 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
-from flask_swagger_ui import get_swaggerui_blueprint
 
 from resources.login import UserLogin, UserLogout
-from datetime import timedelta
 
 from blacklist import BLACKLIST
 
 app = Flask(__name__)
 load_dotenv(".env")
 
-# swagger specific
-SWAGGER_URL = '/swagger'
-API_URL = '/static/swagger-auth.json'
-SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
-    SWAGGER_URL,
-    API_URL,
-    config={
-        'app_name': "MindsY-Authentication-Python-Flask-Rest"
-    }
-)
-app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
-
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
-# 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['JWT_BLACKLIST_ENABLED'] = True
@@ -37,6 +22,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 api = Api(app)
 
 jwt = JWTManager(app)
+
 
 # This method will check if a token is blacklisted, and will be called automatically when blacklist is enabled
 @jwt.token_in_blacklist_loader
@@ -84,6 +70,7 @@ def revoked_token_callback():
         "description": "The token has been revoked.",
         'error': 'token_revoked'
     }), 401
+
 
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogout, '/logout/<string:crp>')
