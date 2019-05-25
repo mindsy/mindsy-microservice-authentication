@@ -1,30 +1,43 @@
 from db import db
+import enum
+
+
+class ManualDomainEnum(enum.Enum):
+    RIGHT = "destro"
+    LEFT = "canhoto"
+
+
+class StatusEnum(enum.Enum):
+    PROGRESS = "andamento"
+    DONE = "finalizado"
+    WAITING = "aguardando"
 
 
 class PatientModel(db.Model):
-    __tablename__ = 'patient'
+    __tablename__ = 'PATIENT'
 
-    id_patient = db.Column(db.Integer, primary_key=True)
-    scholarity = db.Column(db.String(30))
-    observation = db.Column(db.String)
-    manual_domain = db.Column(db.String(15))
-    registry_number_pat = db.Column(db.String(11))
-    dt_birth = db.Column(db.DateTime)
+    id_patient = db.Column('id_patient', db.Integer, primary_key=True)
+    registry_number_pat = db.Column('registry_number', db.String(11), unique=True)
+    dt_birth = db.Column('dt_birth', db.DateTime, nullable=False)
+    scholarity = db.Column('scholarity', db.String(100), nullable=False)
+    observation = db.Column('observation', db.String)
+    manual_domain = db.Column('manual_domain', db.Enum(ManualDomainEnum), nullable=False)
+    status = db.Column('status', db.Enum(StatusEnum), nullable=False)
 
-    pat_psycho_hosps = db.relationship('Pat_Psycho_HospModel', backref='patient_hosp_psy', cascade='all, delete-orphan')
+    person_pat_id = db.Column('fk_person', db.Integer, db.ForeignKey('PERSON.id_person'), unique=True, nullable=False)
+    accountable_patient_id_patient = db.Column('fk_accountable', db.String(11), db.ForeignKey('ACCOUNTABLE.registry_number'), unique=True)
 
-    person_pat_id = db.Column(db.Integer, db.ForeignKey('person.id'), unique=True)
-    
-    accountables = db.relationship('AccountableModel', backref='accountable_patient', uselist=False,
-                                   cascade='all, delete-orphan')
+    pat_psycho_hosps = db.relationship('PatPsychoHospModel', backref='PATIENT', cascade='all, delete-orphan')
 
-    def __init__(self, scholarity, observation, manual_domain, registry_number_pat, dt_birth, person_pat_id):
-        self.scholarity = scholarity 
+    def __init__(self, registry_number_pat, dt_birth, scholarity, observation, manual_domain, status, person_pat_id, accountable_patient_id_patient):
+        self.scholarity = scholarity
         self.observation = observation
         self.manual_domain = manual_domain
         self.registry_number_pat = registry_number_pat
         self.dt_birth = dt_birth
         self.person_pat_id = person_pat_id
+        self.accountable_patient_id_patient = accountable_patient_id_patient
+        self.status = status
     
     def json(self):
         return {
