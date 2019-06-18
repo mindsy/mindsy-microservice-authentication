@@ -7,9 +7,12 @@ from flask_jwt_extended import JWTManager
 from resources.login import UserLogin, UserLogout
 
 from blacklist import BLACKLIST
+from flask_cors import CORS
+from db import db
 
 app = Flask(__name__)
 load_dotenv(".env")
+CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -22,7 +25,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 api = Api(app)
 
 jwt = JWTManager(app)
-
+db.init_app(app)
 
 # This method will check if a token is blacklisted, and will be called automatically when blacklist is enabled
 @jwt.token_in_blacklist_loader
@@ -77,6 +80,4 @@ api.add_resource(UserLogout, '/logout/<string:crp>')
 
 
 if __name__ == '__main__':
-    from db import db
-    db.init_app(app)
     app.run(debug=True, host='0.0.0.0')
