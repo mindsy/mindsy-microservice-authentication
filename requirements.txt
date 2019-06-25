@@ -1,2 +1,9 @@
-coverage
-
+flask
+flask-jwt-extended
+flask-sqlalchemy
+flask-restful
+python-dotenv
+passlib
+PyMySQL
+Flask-Cors
+gunicorn

@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "MindsY",
+    "version": "1.0.0",
+    "title": "MindsY-Authentication-Python-Flask-Rest",
+    "contact": {
+      "email": "MindsY@gmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication Request",
+      "description": "Example API for login and logout requests."
+    }
+  ],
+  "paths":{
+    "/login": {
+      "post": {
+        "tags": [
+          "Login Request"
+        ],
+        "summary": "Login an user request system",
+        "requestBody": {
+          "description": "Login Post User",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/login"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "message: Successfully logged out"
+          },
+          "401": {
+            "description": "message: Invalid Credentials"
+          },
+          "500":{
+            "description": "Something wrong happened."
+        }
+      }
+      }
+    },
+    "/logout/{crp}": {
+      "parameters": [
+        {
+          "name": "crp",
+          "in": "path",
+          "required": true,
+          "description": "crp of the psychologist that we want to match",
+          "type": "string",
+          "schema": {
+            "$ref": "#/components/schemas/logout"
+          }
+        }
+      ],
+      "post": {
+        "tags": [
+          "Logout Request"
+        ],
+        "summary": "Logout an user request system",
+        "requestBody": {
+          "description": "Logout Post User",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/logout"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "access_token: [token]",
+            "schema": {
+              "$ref": "#/components/schemas/login"
+            }
+          },
+          "401": {
+            "description": "message': Invalid Credentials"
+          }
+        }
+      }
+    }
+  },
+  "components":{
+    "schemas": {
+      "login": {
+        "properties": {
+          "crp": {
+            "type": "string",
+            "format": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "logout": {
+        "properties": {
+          "crp": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      }
+    }
+  }
+}
